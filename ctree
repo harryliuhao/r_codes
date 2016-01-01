@@ -1,0 +1,18 @@
+creditNames <- c("checking", "duration","credit_history","purpose","credit_amount","savings","employment","installment_rate","gender_marital","other_debtors","years_at_residence","real_estate","age","other_installment","housing","existing_credits","job","num_liable","phone","foreign","credit")
+
+theURL <- "http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data"
+
+credit <-read.table(theURL, sep=" ", header=FALSE, col.names=creditNames, stringsAsFactors=FALSE)
+
+head(credit)
+
+require(rpart)
+
+credittree <- rpart(credit~credit_amount + age + credit_history+employment, data=credit)
+
+credittree
+
+require(rpart.plot)
+
+rpart.plot(credittree,main="default rpart.plot\n(type = 0, extra = 0)")
+rpart.plot(credittree, main="extra = 106,  under = TRUE", extra=106, under=TRUE, faclen=0)
