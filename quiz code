@@ -1,0 +1,111 @@
+## week3 quiz code
+runif(10)
+str(runif)
+gl(3,10)
+x=rnorm(10)
+plot(rnorm(100))
+
+##week2 quiz code
+x<-data.frame(c1=1:4, c2=c(T,T,F,T))
+nrow(x)
+ncol(x)
+names(x)
+names(x)<-c("col A", "col B")
+names(x)
+x <- list(arrvark=1:5)
+x$a
+x[["a"]]
+x[["a", exact=FALSE]]
+x<-c(1,2,NA,4,NA,5)
+bad<-is.na(x)
+x[bad]<-0
+x
+for (i in 1:10) {print(i)}
+x<-c("a","b","c","e")
+y<-seq_along(x)
+# letter in syntax
+for (letter in x) {print(letter)}
+count <-0
+while (count<10)
+{  
+  print(count)  
+  count<-count+1
+}
+for (i in 1:10) {print(rbinom(1,4,0.5))}
+#cool random walk
+z<-5
+while (z>=0 && z<=10)
+{print(z)
+ coin<-rbinom(1,1,0.5)
+ if (coin==1) {z<-z+1}
+ else {z<-z-1}
+}
+
+# scientific number
+tol<- 1e-8
+tol*1e+10
+
+#function
+add2 <- function(x,y){
+  x+y
+}
+add2(3,4)
+
+#column mean
+#numeric creates a double-precision vector of the specified length with each element equal to 0.
+columnmean <-function(y, removeNA=TRUE){
+  nc<-ncol(y)
+  means <- numeric(nc)
+  for (i in 1:nc){
+    means[i]<-mean(y[,i], na.rm=removeNA)
+  }
+  means
+}
+columnmean(airquality)
+
+#functions
+mdata<-rnorm(100)
+plot(mdata)
+help(rnorm)
+sd(mdata)
+args(lm)
+lm(y~x,mdata,1:100, model=FALSE )
+search()
+
+#Lexical scoping gives value where the function is defined
+#Dynamic scoping gives value where the function is called
+
+#date and time
+x<-Sys.time()
+x
+p<-as.POSIXlt(x)
+names(unclass(p))
+p$wday
+p$yday
+
+#quiz
+x <- 1:10
+if(x > 5) {
+  x <- 0
+}
+
+x[x>5]<-0
+x
+
+f <- function(x) {
+  g <- function(y) {
+    y + z
+  }
+  z <- 4
+  x + g(x)
+}
+z <- 10
+f(3)
+
+x <- 5
+y <- if(x < 3) {
+  NA
+} else {
+  10
+}
+y
