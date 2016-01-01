@@ -1,0 +1,37 @@
+best <- function(state, outcome) {
+
+  ## Read outcome data
+  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+  
+  ## convert outcome to single cap
+  o_split<-as.vector(unlist(strsplit(outcome, " ")))
+  s <- strsplit(o_split, " ")
+  o_cap<-paste(toupper(substring(s, 1,1)), substring(s, 2),sep="", collapse=".")
+  outcome_col<-paste("Hospital.30.Day.Death..Mortality..Rates.from",o_cap,sep=".")
+  
+  
+  ## Check that state and outcome are valid
+  if (!any(data$State == state))
+  {
+    stop("invalid state")
+  }
+  if (!(outcome_col %in% colnames(data)))
+  {
+    stop("invalid outcome")
+  }
+  
+  ## Return hospital name in that state with lowest 30-day death rate
+  
+  st_outcome<-subset(data, (State==state) & (data[,outcome_col]!="Not Available"), select=c("Provider.Number","Hospital.Name", "State", outcome_col))
+  first_min<-st_outcome[which.min(as.numeric(st_outcome[,outcome_col])),]
+  df_min<-first_min[,outcome_col]
+  st_min<-subset(st_outcome,st_outcome[,outcome_col]==df_min)
+  
+  ##Handling ties. If there is a tie for the best hospital for a given outcome, 
+  ##then the hospital names should be sorted in alphabetical order 
+  ##and the first hospital in that set should be chosen
+  st_min<-st_min[order(st_min$Hospital.Name),]
+  st_min<-st_min[1,]
+  st_min[,"Hospital.Name"]
+
+}
