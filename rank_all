@@ -1,0 +1,49 @@
+rankall <- function(outcome, num = "best") {
+  ## Read outcome data
+  data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
+  
+  ## convert outcome to single cap
+  o_split<-as.vector(unlist(strsplit(outcome, " ")))
+  s <- strsplit(o_split, " ")
+  o_cap<-paste(toupper(substring(s, 1,1)), substring(s, 2),sep="", collapse=".")
+  outcome_col<-paste("Hospital.30.Day.Death..Mortality..Rates.from",o_cap,sep=".")
+  
+  
+  ## Check that state and outcome are valid
+  
+  if (!(outcome_col %in% colnames(data)))
+  {
+    stop("invalid outcome")
+  }
+  
+  
+  ## For each state, find the hospital of the given rank
+  ## Return a data frame with the hospital names and the
+  ## (abbreviated) state name
+  
+  s=levels(as.factor(data$State))
+  rank_fnl<- data.frame(Hospital.Name=character(), 
+                        State=character()
+  )
+  
+  
+  for (state in s)
+  {
+    st_outcome<-subset(data, (State==state) & (data[,outcome_col]!="Not Available"), select=c("Provider.Number","Hospital.Name", "State", outcome_col))
+    hp_rank<-st_outcome[order(as.numeric(st_outcome[,outcome_col]),st_outcome[,"Hospital.Name"]),]
+    
+    num_st<-num
+    if(num=="best")
+    {num_st=1}
+    if(num=="worst")
+    {num_st=nrow(hp_rank)}
+    
+    hp_select<-hp_rank[num_st,]
+    hp_select<-hp_select[c("Hospital.Name","State")]
+    hp_select$State<-state
+    rank_fnl<-rbind(rank_fnl,hp_select)
+    
+  }
+  
+  return(rank_fnl)
+}
